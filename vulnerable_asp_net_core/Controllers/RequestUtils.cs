@@ -6,10 +6,13 @@ namespace vulnerable_asp_net_core.Controllers
     {
         public static string GetIfDefined(HttpRequest req, string val)
         {
-            if (req.Query.ContainsKey(val))
-                return req.Query[val];
+            var value = req.Query[val].ToString().Trim();
 
-            return "";
+            // Basic sanitization: remove potentially dangerous characters
+            // Only allow alphanumeric, dash, underscore, and a few safe symbols
+            value = Regex.Replace(value, @"[^\w\-@\.]", string.Empty);
+
+            return value;
         }
     }
 }
